@@ -12,8 +12,8 @@
     <a href="https://github.com/dorianim/mrbs-docker/actions/workflows/release.yml">
         <img src="https://github.com/dorianim/mrbs-docker/actions/workflows/release.yml/badge.svg" alt="Badge release image" />
     </a>
-    <a href="https://hub.docker.com/r/dorianim/mrbs-docker">
-        <img src="https://img.shields.io/docker/pulls/dorianim/mrbs-docker.svg" alt="Docker pulls" />
+    <a href="https://hub.docker.com/r/dorianim/mrbs">
+        <img src="https://img.shields.io/docker/pulls/dorianim/mrbs.svg" alt="Docker pulls" />
     </a>
 </p>
 
