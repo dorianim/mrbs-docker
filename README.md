@@ -32,7 +32,7 @@ This is a docker container for the [Meeting room booking system](https://github.
     version: "2"
     services:
     mrbs:
-        image: dorianim/mrbs-docker
+        image: dorianim/mrbs
         container_name: mrbs
         environment:
         - PUID=1000
