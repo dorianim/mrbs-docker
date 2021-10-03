@@ -31,37 +31,37 @@ This is a docker container for the [Meeting room booking system](https://github.
     ```yaml
     version: "2"
     services:
-    mrbs:
-        image: dorianim/mrbs
-        container_name: mrbs
-        environment:
-        - PUID=1000
-        - PGID=1000
-        - DB_HOST=mrbs-db
-        - DB_USER=mrbs-user
-        - DB_PASS=mrbs-pass
-        - DB_DATABASE=mrbs
-        volumes:
-        - ./config/mrbs:/config
-        ports:
-        - 8888:80
-        restart: unless-stopped
-        depends_on:
-        - mrbs-db
-    mrbs-db:
-        image: mariadb:latest
-        container_name: mrbs_db
-        environment:
-        - PUID=1000
-        - PGID=1000
-        - MYSQL_ROOT_PASSWORD=mrbs-root-pass
-        - TZ=Europe/London
-        - MYSQL_DATABASE=mrbs
-        - MYSQL_USER=mrbs-user
-        - MYSQL_PASSWORD=mrbs-pass
-        volumes:
-        - ./config/mysql:/var/lib/mysql
-        restart: unless-stopped
+        mrbs:
+            image: dorianim/mrbs
+            container_name: mrbs
+            environment:
+            - PUID=1000
+            - PGID=1000
+            - DB_HOST=mrbs-db
+            - DB_USER=mrbs-user
+            - DB_PASS=mrbs-pass
+            - DB_DATABASE=mrbs
+            volumes:
+            - ./config/mrbs:/config
+            ports:
+            - 8888:80
+            restart: unless-stopped
+            depends_on:
+            - mrbs-db
+        mrbs-db:
+            image: mariadb:latest
+            container_name: mrbs_db
+            environment:
+            - PUID=1000
+            - PGID=1000
+            - MYSQL_ROOT_PASSWORD=mrbs-root-pass
+            - TZ=Europe/London
+            - MYSQL_DATABASE=mrbs
+            - MYSQL_USER=mrbs-user
+            - MYSQL_PASSWORD=mrbs-pass
+            volumes:
+            - ./config/mysql:/var/lib/mysql
+            restart: unless-stopped
     ```
 1. Adjust the port (default `8888`) to your needs
 2. Start the mrbs-docker:
