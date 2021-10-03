@@ -46,6 +46,8 @@ RUN \
     "https://github.com/meeting-room-booking-system/mrbs-code/archive/${MRBS_RELEASE}.tar.gz" && \
   echo "**** extract only folder 'web' ****" && \
   tar -C /var/www/html --strip-components=2 -zxvf /tmp/mrbs.tar.gz $(tar --exclude="*/*" -tf /tmp/mrbs.tar.gz)web && \
+  mkdir -p /usr/share/mrbs && \
+  tar -C /usr/share/mrbs --strip-components=1 -zxvf /tmp/mrbs.tar.gz $(tar --exclude="*/*" -tf /tmp/mrbs.tar.gz)tables.my.sql && \
   echo "**** cleanup ****" && \
   rm -rf \
     /tmp/*
