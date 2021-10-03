@@ -1,0 +1,30 @@
+#!/usr/bin/with-contenv bash
+
+# make our folders
+mkdir -p \
+    /config/{www,log/nginx,keys,log/php} \
+    /run \
+    /var/lib/nginx/tmp/client_body \
+    /var/tmp/nginx
+
+#fix php-fpm log location
+sed -i "s#;error_log = log/php7/error.log.*#error_log = /config/log/php/error.log#g" /etc/php7/php-fpm.conf
+sed -i "s#;log_level = notice#log_level = debug#g" /etc/php7/php-fpm.conf
+
+#fix php-fpm user
+sed -i "s#user = nobody.*#user = abc#g" /etc/php7/php-fpm.d/www.conf
+sed -i "s#group = nobody.*#group = abc#g" /etc/php7/php-fpm.d/www.conf
+
+# backwards compatibility for alpine >=3.14
+if [ ! -e /etc/nginx/conf.d ]; then
+    ln -s /etc/nginx/http.d /etc/nginx/conf.d
+fi
+
+# permissions
+chown -R abc:abc \
+    /config \
+    /var/lib/nginx \
+    /var/tmp/nginx
+chmod -R g+w \
+    /config/{nginx,www}
+chmod -R 644 /etc/logrotate.d

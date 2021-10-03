@@ -1,0 +1,46 @@
+#!/usr/bin/with-contenv bash
+
+chown -R abc:abc /var/www
+
+# create directory structure
+mkdir -p \
+	/config/www
+
+# check for .env and copy default if needed
+[[ ! -f "/config/www/config.inc.php" ]] && \
+	cp /var/www/html/config.inc.php-sample /config/www/config.inc.php
+
+# check for zero-length .env and alert user if found
+[[ ! -s "/config/www/config.inc.php" ]] && \
+  echo "WARNING: zero-length config.inc.php file detected. Please delete /config/www/config.inc.php and restart the container"
+
+# check for the mysql endpoint for 30 seconds
+END=$((SECONDS+30))
+while [ ${SECONDS} -lt ${END} ] && [ -n "${DB_HOST+x}" ]; do
+	/usr/bin/nc -z ${DB_HOST} 3306 && \
+	if [ ! -z "$(/usr/bin/nc -w1 ${DB_HOST} 3306)" ]; then
+		[ ! -z "${RUN}" ] && break
+		RUN="RAN"
+		# we sleep here again due to first run init on DB containers
+		[ ! -f /dbwait.lock ] && sleep 5
+	else
+		sleep 1
+	fi
+	sleep 1
+done
+
+# update database - will set up database if fresh, or, migrate existing
+echo "*** DB init/upgrade ***"
+MYSQL_CMD="mysql -u$DB_USER -h$DB_HOST -p$DB_PASS -D$DB_DATABASE"
+TABLE_COUNT=$($MYSQL_CMD -e"SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$DB_DATABASE'" -sN)
+if [ $TABLE_COUNT -eq "0" ]; then
+	echo "*** DB is empty -> initing!! ***"
+	$MYSQL_CMD < /var/www/html/tables.my.sql
+fi
+
+# set permissions
+chown -R abc:abc \
+	/config
+
+# set lockfile to avoid DB waits for this specific container
+touch /dbwait.lock
