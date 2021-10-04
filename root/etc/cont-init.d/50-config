@@ -4,7 +4,8 @@ chown -R abc:abc /var/www
 
 # create directory structure
 mkdir -p \
-	/config/www
+	/config/www \
+	/config/www/assets
 
 # check for .env and copy default if needed
 [[ ! -f "/config/www/config.inc.php" ]] && \
@@ -13,6 +14,10 @@ mkdir -p \
 # check for zero-length .env and alert user if found
 [[ ! -s "/config/www/config.inc.php" ]] && \
   echo "WARNING: zero-length config.inc.php file detected. Please delete /config/www/config.inc.php and restart the container"
+
+# link assets
+rm -rf /var/www/html/assets
+ln -s /config/www/assets /var/www/html/assets
 
 # check for the mysql endpoint for 30 seconds
 END=$((SECONDS+30))

@@ -34,4 +34,8 @@ $db_tbl_prefix = "mrbs_";
 // connections if you can.
 $db_persist = FALSE;
 
+// default to modern theme
+$theme = "modern";
+$disable_menu_items_for_non_admins = ["rooms", "user_list"];
+
 require "/config/www/config.inc.php";

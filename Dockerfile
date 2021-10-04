@@ -1,14 +1,10 @@
 FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.14
 
-# set version label
-ARG BUILD_DATE
-ARG VERSION
-ARG MRBS_RELEASE
-LABEL build_version="Version:- ${VERSION} Build-date:- ${BUILD_DATE}"
-LABEL maintainer="Dorian Zedler <mail@dorian.im>"
+# versions
+ARG MRBS_RELEASE=mrbs-1_9_4
+ARG MODERN_MRBS_THEME_RELEASE=v0.2.0
 
-# package versions
-ARG MRBS_RELEASE
+LABEL maintainer="Dorian Zedler <mail@dorian.im>"
 
 RUN \
   echo "**** install packages ****" && \
@@ -32,7 +28,9 @@ RUN \
     tar && \
   echo "**** configure php-fpm ****" && \
   sed -i 's/;clear_env = no/clear_env = no/g' /etc/php7/php-fpm.d/www.conf && \
-  echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /etc/php7/php-fpm.conf && \
+  echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /etc/php7/php-fpm.conf
+
+RUN \
   echo "**** fetch mrbs ****" && \
   rm -rf /var/www/html && \
   mkdir -p\
@@ -48,6 +46,23 @@ RUN \
   tar -C /var/www/html --strip-components=2 -zxvf /tmp/mrbs.tar.gz $(tar --exclude="*/*" -tf /tmp/mrbs.tar.gz)web && \
   mkdir -p /usr/share/mrbs && \
   tar -C /usr/share/mrbs --strip-components=1 -zxvf /tmp/mrbs.tar.gz $(tar --exclude="*/*" -tf /tmp/mrbs.tar.gz)tables.my.sql && \
+  echo "**** cleanup ****" && \
+  rm -rf \
+    /tmp/*
+
+ RUN \
+  echo "**** fetch modern-mrbs-theme ****" && \
+  mkdir -p /var/www/html/Themes/modern && \
+  if [ -z ${MODERN_MRBS_THEME_RELEASE+x} ]; then \
+    MODERN_MRBS_THEME_RELEASE=$(curl -sX GET "https://api.github.com/repos/dorianim/modern-mrbs-theme/releases/latest" \
+    | awk '/tag_name/{print $4;exit}' FS='[""]'); \
+  fi && \
+  curl -o \
+  /tmp/modern-mrbs-theme.tar.gz -L \
+    "https://github.com/dorianim/modern-mrbs-theme/archive/${MODERN_MRBS_THEME_RELEASE}.tar.gz" && \
+  echo "**** extract only folder 'modern' ****" && \
+  tar -C /var/www/html/Themes/modern --strip-components=2 -zxvf /tmp/modern-mrbs-theme.tar.gz $(tar --exclude="*/*" -tf /tmp/modern-mrbs-theme.tar.gz)modern && \
+  \
   echo "**** cleanup ****" && \
   rm -rf \
     /tmp/*
