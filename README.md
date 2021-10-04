@@ -21,6 +21,8 @@ This is a docker container for the [Meeting room booking system](https://github.
 
 ## Features
 - Automatic installation
+- Easy updating
+- [Modern MRBS theme](https://github.com/dorianim/modern-mrbs-theme) included
 
 # Installation
 1. Create a folder for installation:
