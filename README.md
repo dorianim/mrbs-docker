@@ -71,7 +71,7 @@ This is a docker container for the [Meeting room booking system](https://github.
     docker-compose up -d
     ```
 3. Done! You can reach your mrbs-docker on `localhost:5080`
-4. Adjust your `config.inc.php` in `/opt/mrbs-docker/config/www/config.inc.php`
+4. Adjust your `config.inc.php` in `/opt/mrbs-docker/config/mrbs/www/config.inc.php`
 
 # Updating
 To update, just go to your installation folder and pull  
