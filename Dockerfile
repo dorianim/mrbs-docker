@@ -6,6 +6,18 @@ ARG MODERN_MRBS_THEME_RELEASE=v0.2.0
 
 LABEL maintainer="Dorian Zedler <mail@dorian.im>"
 
+ENV MUSL_LOCPATH="/usr/share/i18n/locales/musl"
+RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/community musl-locales musl-locales-lang \
+    && cd "$MUSL_LOCPATH" \
+    && for i in *.UTF-8; do \
+     i1=${i%%.UTF-8}; \
+     i2=${i1/_/-}; \
+     i3=${i/_/-}; \
+     cp -a "$i" "$i1"; \
+     cp -a "$i" "$i2"; \
+     cp -a "$i" "$i3"; \
+     done
+
 RUN \
   echo "**** install packages ****" && \
   apk update && \
@@ -25,6 +37,7 @@ RUN \
     php7-phar \
     php7-simplexml \
     php7-tokenizer \
+    php7-intl \
     tar && \
   echo "**** configure php-fpm ****" && \
   sed -i 's/;clear_env = no/clear_env = no/g' /etc/php7/php-fpm.d/www.conf && \
