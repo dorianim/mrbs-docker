@@ -17,7 +17,6 @@ services:
      # - ./dev/modern-mrbs-theme/modern:/var/www/html/Themes/modern
     ports:
       - 8888:80
-    restart: unless-stopped
     depends_on:
       - mrbs-db
   mrbs-db:
@@ -33,11 +32,9 @@ services:
       - MYSQL_PASSWORD=mrbs-pass
     volumes:
       - ./config/mysql:/var/lib/mysql
-    restart: unless-stopped
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    restart: always
     environment:
         - PMA_HOST=mrbs-db
         - PMA_USER=root
