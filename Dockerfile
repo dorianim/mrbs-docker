@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-alpine-nginx
+FROM ghcr.io/linuxserver/baseimage-alpine-nginx:2021.11.04
 
 # versions
 ARG MRBS_RELEASE=mrbs-1_9_4
