@@ -65,6 +65,7 @@ This is a docker container for the [Meeting room booking system](https://github.
             - ./config/mysql:/var/lib/mysql
             restart: unless-stopped
     ```
+    PLEASE NOTE: If you're trying to run this on a raspberry pi, please use `jsurf/rpi-mariadb` for the database instead of `mariadb`.
 1. Adjust the port (default `8888`) to your needs
 2. Start the mrbs-docker:
     ```bash
