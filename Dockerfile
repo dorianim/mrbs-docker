@@ -2,7 +2,7 @@ FROM ghcr.io/linuxserver/baseimage-alpine-nginx:2021.11.04
 
 # versions
 ARG MRBS_RELEASE=mrbs-1_9_4
-ARG MODERN_MRBS_THEME_RELEASE=v0.2.3
+ARG MODERN_MRBS_THEME_RELEASE=v0.2.4
 
 LABEL maintainer="Dorian Zedler <mail@dorian.im>"
 
