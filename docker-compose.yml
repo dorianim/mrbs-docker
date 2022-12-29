@@ -14,7 +14,7 @@ services:
       - DB_DATABASE=mrbs
     volumes:
       - ./config/mrbs:/config
-     # - ./dev/modern-mrbs-theme/modern:/var/www/html/Themes/modern
+      - ./dev/modern-mrbs-theme/modern:/var/www/html/Themes/modern
     ports:
       - 8888:80
     depends_on:
@@ -33,12 +33,12 @@ services:
     volumes:
       - ./config/mysql:/var/lib/mysql
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    environment:
-        - PMA_HOST=mrbs-db
-        - PMA_USER=root
-        - PMA_PASSWORD=mrbs-root-pass
-        - UPLOAD_LIMIT=512M
-    ports:
-    - "8890:80"
+  #phpmyadmin:
+  #  image: phpmyadmin/phpmyadmin
+  #  environment:
+  #      - PMA_HOST=mrbs-db
+  #      - PMA_USER=root
+  #      - PMA_PASSWORD=mrbs-root-pass
+  #      - UPLOAD_LIMIT=512M
+  #  ports:
+  #  - "8890:80"
