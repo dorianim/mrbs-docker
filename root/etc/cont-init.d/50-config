@@ -20,14 +20,11 @@ rm -rf /var/www/html/assets
 ln -s /config/www/assets /var/www/html/assets
 
 # Set required variables depending on the db system used
-if [[ $MRBS_DB_SYSTEM = "mysql" ]]; then
+if [ $MRBS_DB_SYSTEM -eq "mysql" ]; then
 	SQL_CMD="mysql -u$MRBS_DB_USER -h$MRBS_DB_HOST -p$MRBS_DB_PASS -D$MRBS_DB_DATABASE"
-	TABLES_FILE=tables.my.sql
 	DB_PORT=3306
-elif [[ $MRBS_DB_SYSTEM = "pgsql" ]]; then
-	export PGPASSWORD=$MRBS_DB_PASS
-	SQL_CMD="psql -U $MRBS_DB_USER -h $MRBS_DB_HOST $MRBS_DB_DATABASE"
-	TABLES_FILE=tables.pg.sql
+elif [ $MRBS_DB_SYSTEM -eq "pgsql" ]; then
+	SQL_CMD="PGPASSWORD=$MRBS_DB_PASS psql -U $MRBS_DB_USER -h $MRBS_DB_HOST $MRBS_DB_DATABASE"
 	DB_PORT=5432
 fi
 
@@ -50,7 +47,7 @@ done
 echo "*** DB init/upgrade ***"
 
 TABLE_COUNT=$($SQL_CMD -e"SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$MRBS_DB_DATABASE'" -sN)
-if [[ $TABLE_COUNT -eq "0" ]]; then
+if [ $TABLE_COUNT -eq "0" ]; then
 	echo "*** DB is empty -> initing!! ***"
 	if ! $SQL_CMD </usr/share/mrbs/$TABLES_FILE; then
 		echo "*** DB init FAILED!! ***"
@@ -58,7 +55,7 @@ if [[ $TABLE_COUNT -eq "0" ]]; then
 	fi
 fi
 TABLE_COUNT=$($SQL_CMD -e"SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$MRBS_DB_DATABASE'" -sN)
-if [[ $TABLE_COUNT -eq "0" ]]; then
+if [ $TABLE_COUNT -eq "0" ]; then
 	echo "*** DB is empty -> initing!! ***"
 	if ! $SQL_CMD </usr/share/mrbs/$TABLES_FILE; then
 		echo "*** DB init FAILED!! ***"
