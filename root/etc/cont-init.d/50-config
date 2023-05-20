@@ -8,40 +8,59 @@ mkdir -p \
 	/config/www/assets
 
 # check for .env and copy default if needed
-[[ ! -f "/config/www/config.inc.php" ]] && \
+[[ ! -f "/config/www/config.inc.php" ]] &&
 	cp /var/www/html/config.inc.php-sample /config/www/config.inc.php
 
 # check for zero-length .env and alert user if found
-[[ ! -s "/config/www/config.inc.php" ]] && \
-  echo "WARNING: zero-length config.inc.php file detected. Please delete /config/www/config.inc.php and restart the container"
+[[ ! -s "/config/www/config.inc.php" ]] &&
+	echo "WARNING: zero-length config.inc.php file detected. Please delete /config/www/config.inc.php and restart the container"
 
 # link assets
 rm -rf /var/www/html/assets
 ln -s /config/www/assets /var/www/html/assets
 
+# Set required variables depending on the db system used
+if [[ $MRBS_DB_SYSTEM = "mysql" ]]; then
+	SQL_CMD="mysql -u$MRBS_DB_USER -h$MRBS_DB_HOST -p$MRBS_DB_PASS -D$MRBS_DB_DATABASE"
+	TABLES_FILE=tables.my.sql
+	DB_PORT=3306
+elif [[ $MRBS_DB_SYSTEM = "pgsql" ]]; then
+	export PGPASSWORD=$MRBS_DB_PASS
+	SQL_CMD="psql -U $MRBS_DB_USER -h $MRBS_DB_HOST $MRBS_DB_DATABASE"
+	TABLES_FILE=tables.pg.sql
+	DB_PORT=5432
+fi
+
 # check for the mysql endpoint for 30 seconds
-END=$((SECONDS+30))
-while [ ${SECONDS} -lt ${END} ] && [ -n "${DB_HOST+x}" ]; do
-	/usr/bin/nc -z ${DB_HOST} 3306 && \
-	if [ ! -z "$(/usr/bin/nc -w1 ${DB_HOST} 3306)" ]; then
-		[ ! -z "${RUN}" ] && break
-		RUN="RAN"
-		# we sleep here again due to first run init on DB containers
-		[ ! -f /dbwait.lock ] && sleep 5
-	else
-		sleep 1
-	fi
+END=$((SECONDS + 30))
+while [[ ${SECONDS} -lt ${END} ]] && [[ -n "${DB_HOST+x}" ]]; do
+	/usr/bin/nc -z ${DB_HOST} ${DB_PORT} &&
+		if [[ -n "$(/usr/bin/nc -w1 ${DB_HOST} ${DB_PORT})" ]]; then
+			[[ -n "${RUN}" ]] && break
+			RUN="RAN"
+			# we sleep here again due to first run init on DB containers
+			[[ ! -f /dbwait.lock ]] && sleep 5
+		else
+			sleep 1
+		fi
 	sleep 1
 done
 
 # update database - will set up database if fresh, or, migrate existing
 echo "*** DB init/upgrade ***"
-MYSQL_CMD="mysql -u$DB_USER -h$DB_HOST -p$DB_PASS -D$DB_DATABASE"
-TABLE_COUNT=$($MYSQL_CMD -e"SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$DB_DATABASE'" -sN)
-if [ $TABLE_COUNT -eq "0" ]; then
+
+TABLE_COUNT=$($SQL_CMD -e"SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$MRBS_DB_DATABASE'" -sN)
+if [[ $TABLE_COUNT -eq "0" ]]; then
 	echo "*** DB is empty -> initing!! ***"
-	$MYSQL_CMD < /usr/share/mrbs/tables.my.sql
-	if [ $? -ne 0 ]; then
+	if ! $SQL_CMD </usr/share/mrbs/$TABLES_FILE; then
+		echo "*** DB init FAILED!! ***"
+		exit 1
+	fi
+fi
+TABLE_COUNT=$($SQL_CMD -e"SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$MRBS_DB_DATABASE'" -sN)
+if [[ $TABLE_COUNT -eq "0" ]]; then
+	echo "*** DB is empty -> initing!! ***"
+	if ! $SQL_CMD </usr/share/mrbs/$TABLES_FILE; then
 		echo "*** DB init FAILED!! ***"
 		exit 1
 	fi

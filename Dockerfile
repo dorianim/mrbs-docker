@@ -24,15 +24,17 @@ RUN \
   apk add --no-cache  \
     curl \
     mysql-client \
+    postgresql-client \
     php81-ctype \
     php81-curl \
     php81-dom \
     php81-gd \
     php81-ldap \
     php81-mbstring \
-    php81-mysqlnd \
+    php81-pgsql \
     php81-openssl \
     php81-pdo_mysql \
+    php81-pdo_pgsql \
     php81-phar \
     php81-simplexml \
     php81-tokenizer \
@@ -57,7 +59,8 @@ RUN \
   echo "**** extract only folder 'web' ****" && \
   tar -C /var/www/html --strip-components=2 -zxvf /tmp/mrbs.tar.gz $(tar --exclude="*/*" -tf /tmp/mrbs.tar.gz)web && \
   mkdir -p /usr/share/mrbs && \
-  tar -C /usr/share/mrbs --strip-components=1 -zxvf /tmp/mrbs.tar.gz $(tar --exclude="*/*" -tf /tmp/mrbs.tar.gz)tables.my.sql && \
+  tar -C /usr/share/mrbs --strip-components=1 -zxvf /tmp/mrbs.tar.gz \
+  --wildcards $(tar --exclude="*/*" -tf /tmp/mrbs.tar.gz)tables.*.sql && \
   echo "**** cleanup ****" && \
   rm -rf \
     /tmp/*

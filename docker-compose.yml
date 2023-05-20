@@ -33,6 +33,20 @@ services:
     volumes:
       - ./config/mysql:/var/lib/mysql
 
+  # mrbs-db:
+  #   image: postgres:latest
+  #   container_name: mrbs_db
+  #   environment:
+  #     - PUID=1000
+  #     - PGID=1000
+  #     - MYSQL_ROOT_PASSWORD=mrbs-root-pass
+  #     - TZ=Europe/London
+  #     - MYSQL_DATABASE=mrbs
+  #     - MYSQL_USER=mrbs-user
+  #     - MYSQL_PASSWORD=mrbs-pass
+  #   volumes:
+  #     - ./config/pgsql:/var/lib/pgsql
+
   #phpmyadmin:
   #  image: phpmyadmin/phpmyadmin
   #  environment:
