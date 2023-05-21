@@ -19,15 +19,14 @@ mkdir -p \
 rm -rf /var/www/html/assets
 ln -s /config/www/assets /var/www/html/assets
 
-# Set required variables depending on the db system used
-if [ $MRBS_DB_SYSTEM -eq "mysql" ]; then
-	SQL_CMD="mysql -u$MRBS_DB_USER -h$MRBS_DB_HOST -p$MRBS_DB_PASS -D$MRBS_DB_DATABASE"
-	SQL_ARGS="-sNe"
-	SQL_QUERY="SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$MRBS_DB_DATABASE'"
-	TABLES_FILE=tables.my.sql
-	DB_PORT=3306
-elif [[ $MRBS_DB_SYSTEM = "pgsql" ]]; then
-	export PGPASSWORD=$MRBS_DB_PASS
+# Set required variables depending on the db system used and mysql as default
+SQL_CMD="mysql -u$MRBS_DB_USER -h$MRBS_DB_HOST -p$MRBS_DB_PASS -D$MRBS_DB_DATABASE"
+SQL_ARGS="-sNe"
+SQL_QUERY="SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$MRBS_DB_DATABASE'"
+TABLES_FILE=tables.my.sql
+DB_PORT=3306
+if [[ $MRBS_DB_SYSTEM = "pgsql" ]]; then
+	export PGPASSWORD=$MRBS_DB_PASSWORD
 	SQL_CMD="psql -U $MRBS_DB_USER -h $MRBS_DB_HOST $MRBS_DB_DATABASE"
 	SQL_ARGS="-tc"
 	SQL_QUERY="SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = '$MRBS_DB_DATABASE'"

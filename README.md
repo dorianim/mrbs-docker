@@ -39,10 +39,10 @@ This is a docker container for the [Meeting room booking system](https://github.
             environment:
             - PUID=1000
             - PGID=1000
-            - DB_HOST=mrbs-db
-            - DB_USER=mrbs-user
-            - DB_PASS=mrbs-pass
-            - DB_DATABASE=mrbs
+            - MRBS_DB_HOST=mrbs-db
+            - MRBS_DB_USER=mrbs-user
+            - MRBS_DB_PASSWORD=mrbs-pass
+            - MRBS_DB_DATABASE=mrbs
             volumes:
             - ./config/mrbs:/config
             ports:
