@@ -1,5 +1,10 @@
 #!/usr/bin/with-contenv bash
 
+[[ -z $MRBS_DB_DATABASE ]] && MRBS_DB_DATABASE=$DB_DATABASE
+[[ -z $MRBS_DB_USER ]] && MRBS_DB_USER=$DB_USER
+[[ -z $MRBS_DB_HOST ]] && MRBS_DB_HOST=$DB_HOST
+[[ -z $MRBS_DB_PASSWORD ]] && MRBS_DB_PASSWORD=$DB_PASS
+
 chown -R abc:abc /var/www
 
 # create directory structure
