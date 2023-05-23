@@ -25,7 +25,7 @@ $db_login = $_ENV['MRBS_DB_USER'] ?? $_ENV['DB_USER'];
 $db_password = $_ENV['MRBS_DB_PASSWORD']  ?? $_ENV['DB_PASS'];
 // Prefix for table names.  This will allow multiple installations where only
 // one database is available
-$db_tbl_prefix = $_ENV['MRBS_DB_TBL_PREFIX'] ?? "mrbs_";
+$db_tbl_prefix = "mrbs_";
 // Set $db_persist to TRUE to use PHP persistent (pooled) database connections.  Note
 // that persistent connections are not recommended unless your system suffers significant
 // performance problems without them.   They can cause problems with transactions and
