@@ -7,6 +7,7 @@ ARG MODERN_MRBS_THEME_RELEASE=v0.4.0
 LABEL maintainer="Dorian Zedler <mail@dorian.im>"
 
 ENV MUSL_LOCPATH="/usr/share/i18n/locales/musl"
+ENV MRBS_DB_SYSTEM="mysql"
 RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/community musl-locales musl-locales-lang \
     && cd "$MUSL_LOCPATH" \
     && for i in *.UTF-8; do \
@@ -80,6 +81,5 @@ RUN \
     /tmp/*
 
 COPY root/ /
-ENV MRBS_DB_SYSTEM mysql
 VOLUME /config
 EXPOSE 80
