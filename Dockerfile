@@ -58,7 +58,7 @@ RUN \
   echo "**** extract only folder 'web' ****" && \
   tar -C /var/www/html --strip-components=2 -zxvf /tmp/mrbs.tar.gz $(tar --exclude="*/*" -tf /tmp/mrbs.tar.gz)web && \
   mkdir -p /usr/share/mrbs && \
-  tar -C /usr/share/mrbs --strip-components=1 -zxvf /tmp/mrbs.tar.gz $(tar --exclude="*/*" -tf /tmp/mrbs.tar.gz)tables.my.sql && \
+  tar -C /usr/share/mrbs --wildcards --strip-components=1 -zxvf /tmp/mrbs.tar.gz $(tar --exclude="*/*" -tf /tmp/mrbs.tar.gz)tables.*.sql && \
   echo "**** cleanup ****" && \
   rm -rf \
     /tmp/*
