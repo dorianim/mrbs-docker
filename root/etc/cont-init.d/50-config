@@ -1,7 +1,5 @@
 #!/usr/bin/with-contenv bash
 
-set -x
-
 [[ $DB_HOST ]] && export MRBS_DB_HOST=$DB_HOST
 [[ $DB_USER ]] && export MRBS_DB_USER=$DB_USER
 [[ $DB_PASS ]] && export MRBS_DB_PASSWORD=$DB_PASS
