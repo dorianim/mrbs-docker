@@ -9,20 +9,20 @@ $dbsys = getenv('MRBS_DB_SYSTEM');
 // to use Unix Domain Sockets instead of TCP/IP. For mysql "localhost"
 // tells the system to use Unix Domain Sockets, and $db_port will be ignored;
 // if you want to force TCP connection you can use "127.0.0.1".
-$db_host = getenv('MRBS_DB_HOST') ?? getenv('DB_HOST');
+$db_host = getenv('MRBS_DB_HOST') ? getenv('MRBS_DB_HOST') : getenv('DB_HOST');
 // If you need to use a non standard port for the database connection you
 // can uncomment the following line and specify the port number
 // $db_port = 1234;
 // Database name:
-$db_database = getenv('MRBS_DB_DATABASE') ?? getenv('DB_DATABASE');
+$db_database = getenv('MRBS_DB_DATABASE') ? getenv('MRBS_DB_DATABASE') : getenv('DB_DATABASE');
 // Schema name.  This only applies to PostgreSQL and is only necessary if you have more
 // than one schema in your database and also you are using the same MRBS table names in
 // multiple schemas.
 //$db_schema = "public";
 // Database login user name:
-$db_login = getenv('MRBS_DB_USER') ?? getenv('DB_USER');
+$db_login = getenv('MRBS_DB_USER') ? getenv('MRBS_DB_USER') : getenv('DB_USER');
 // Database login password:
-$db_password = getenv('MRBS_DB_PASSWORD')  ?? getenv('DB_PASS');
+$db_password = getenv('MRBS_DB_PASSWORD') ? getenv('MRBS_DB_PASSWORD') : getenv('DB_PASS');
 // Prefix for table names.  This will allow multiple installations where only
 // one database is available
 $db_tbl_prefix = "mrbs_";
