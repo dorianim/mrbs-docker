@@ -11,6 +11,10 @@ mkdir -p \
 [[ ! -f "/config/www/config.inc.php" ]] &&
 	cp /var/www/html/config.inc.php-sample /config/www/config.inc.php
 
+# genderate secret salt
+[[ ! -f "/config/keys/secretsalt" ]] &&
+	LC_CTYPE=C tr -c -d '0123456789abcdefghijklmnopqrstuvwxyz' </dev/urandom | dd bs=32 count=1 2>/dev/null > /config/keys/secretsalt
+
 # check for zero-length .env and alert user if found
 [[ ! -s "/config/www/config.inc.php" ]] &&
 	echo "WARNING: zero-length config.inc.php file detected. Please delete /config/www/config.inc.php and restart the container"
@@ -26,7 +30,6 @@ SQL_QUERY="SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHE
 TABLES_FILE=tables.my.sql
 DB_PORT=3306
 if [[ "$DB_TYPE" == "pgsql" ]]; then
-	export PGPASSWORD=$DB_PASS
 	SQL_CMD="psql -U $DB_USER -h $DB_HOST $DB_DATABASE"
 	SQL_ARGS="-tc"
 	SQL_QUERY="SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = '$DB_DATABASE'"

@@ -58,4 +58,12 @@ $disable_menu_items_for_non_admins = ["rooms", "user_list"];
 // The following line must be uncommented by removing the '//' at the beginning
 $timezone = getenv("TZ") ? getenv("TZ") : "Europe/Berlin";
 
+/*************
+ * SAML
+ *************/
+
+$auth['saml']['ssp_path'] = '/var/www/simplesamlphp';
+$auth['saml']['ssp_protect_web_interface'] = true;
+$auth['saml']['authsource'] = 'default-sp';
+
 require "/config/www/config.inc.php";

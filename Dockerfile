@@ -2,6 +2,7 @@ FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.17
 
 # versions
 ARG MRBS_RELEASE=mrbs-1_11_0
+ARG SIMPLESAMLPHP_RELEASE=1.19.8
 ARG MODERN_MRBS_THEME_RELEASE=v0.4.0
 
 LABEL maintainer="Dorian Zedler <mail@dorian.im>"
@@ -46,39 +47,40 @@ RUN \
 RUN \
   echo "**** fetch mrbs ****" && \
   rm -rf /var/www/html && \
-  mkdir -p\
-    /var/www/html && \
-  if [ -z ${MRBS_RELEASE+x} ]; then \
-    MRBS_RELEASE=$(curl -sX GET "https://api.github.com/repos/meeting-room-booking-system/mrbs-code/releases/latest" \
-    | awk '/tag_name/{print $4;exit}' FS='[""]'); \
-  fi && \
-  curl -o \
-  /tmp/mrbs.tar.gz -L \
+  mkdir -p /var/www/html && \
+  curl -o /tmp/mrbs.tar.gz -L \
     "https://github.com/meeting-room-booking-system/mrbs-code/archive/${MRBS_RELEASE}.tar.gz" && \
   echo "**** extract only folder 'web' ****" && \
   tar -C /var/www/html --strip-components=2 -zxvf /tmp/mrbs.tar.gz $(tar --exclude="*/*" -tf /tmp/mrbs.tar.gz)web && \
   mkdir -p /usr/share/mrbs && \
   tar -C /usr/share/mrbs --wildcards --strip-components=1 -zxvf /tmp/mrbs.tar.gz $(tar --exclude="*/*" -tf /tmp/mrbs.tar.gz)tables.*.sql && \
   echo "**** cleanup ****" && \
-  rm -rf \
-    /tmp/*
+  rm -rf /tmp/* && \
+  echo "**** apply patches ****" && \
+  sed -i '80s/parent::init();/parent::init($lifetime);/' /var/www/html/lib/MRBS/Session/SessionSaml.php
+  # TODO: remove once it is fixed in MRBS
 
- RUN \
+RUN \
+  echo "**** fetch simplesamlphp ****" && \
+  mkdir -p /var/www/simplesamlphp && \
+  curl -o \
+  /tmp/simplesamlphp.tar.gz -L \
+    "https://github.com/simplesamlphp/simplesamlphp/releases/download/v${SIMPLESAMLPHP_RELEASE}/simplesamlphp-${SIMPLESAMLPHP_RELEASE}.tar.gz" && \
+  echo "**** extract simplesamlphp ****" && \
+  tar -C /var/www/simplesamlphp --strip-components=1 -zxvf /tmp/simplesamlphp.tar.gz && \
+  echo "**** cleanup ****" && \
+  rm -rf /tmp/*
+
+RUN \
   echo "**** fetch modern-mrbs-theme ****" && \
   mkdir -p /var/www/html/Themes/modern && \
-  if [ -z ${MODERN_MRBS_THEME_RELEASE+x} ]; then \
-    MODERN_MRBS_THEME_RELEASE=$(curl -sX GET "https://api.github.com/repos/dorianim/modern-mrbs-theme/releases/latest" \
-    | awk '/tag_name/{print $4;exit}' FS='[""]'); \
-  fi && \
-  curl -o \
-  /tmp/modern-mrbs-theme.tar.gz -L \
+  curl -o /tmp/modern-mrbs-theme.tar.gz -L \
     "https://github.com/dorianim/modern-mrbs-theme/archive/${MODERN_MRBS_THEME_RELEASE}.tar.gz" && \
   echo "**** extract only folder 'modern' ****" && \
   tar -C /var/www/html/Themes/modern --strip-components=2 -zxvf /tmp/modern-mrbs-theme.tar.gz $(tar --exclude="*/*" -tf /tmp/modern-mrbs-theme.tar.gz)modern && \
   \
   echo "**** cleanup ****" && \
-  rm -rf \
-    /tmp/*
+  rm -rf /tmp/*
 
 COPY root/ /
 VOLUME /config
