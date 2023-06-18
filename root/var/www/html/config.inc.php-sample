@@ -11,23 +11,3 @@
  *   MySQL Configuration is set up automatically.
  **************************************************************************/
 
-/**********
- * Timezone
- **********/
- 
-// The timezone your meeting rooms run in. It is especially important
-// to set this if you're using PHP 5 on Linux. In this configuration
-// if you don't, meetings in a different DST than you are currently
-// in are offset by the DST offset incorrectly.
-//
-// Note that timezones can be set on a per-area basis, so strictly speaking this
-// setting should be in areadefaults.inc.php, but as it is so important to set
-// the right timezone it is included here.
-//
-// When upgrading an existing installation, this should be set to the
-// timezone the web server runs in.  See the INSTALL document for more information.
-//
-// A list of valid timezones can be found at http://php.net/manual/timezones.php
-// The following line must be uncommented by removing the '//' at the beginning
-$timezone = $_ENV['MRBS_TIMEZONE'] ?? "Europe/Berlin";
-

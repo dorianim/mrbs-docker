@@ -20,62 +20,69 @@
 This is a docker container for the [Meeting room booking system](https://github.com/meeting-room-booking-system/mrbs-code).
 
 ## Features
+
 - Automatic installation
 - Easy updating
 - [Modern MRBS theme](https://github.com/dorianim/modern-mrbs-theme) included
 
 # Installation
+
 1. Create a folder for installation:
-    ```bash
-    mkdir /opt/mrbs-docker && cd /opt/mrbs-docker
-    ```
+   ```bash
+   mkdir /opt/mrbs-docker && cd /opt/mrbs-docker
+   ```
 2. Create the file docker-compose.yml with this content:
-    ```yaml
-    version: "2"
-    services:
-        mrbs:
-            image: dorianim/mrbs
-            container_name: mrbs
-            environment:
-            - PUID=1000
-            - PGID=1000
-            - MRBS_DB_HOST=mrbs-db
-            - MRBS_DB_USER=mrbs-user
-            - MRBS_DB_PASSWORD=mrbs-pass
-            - MRBS_DB_DATABASE=mrbs
-            volumes:
-            - ./config/mrbs:/config
-            ports:
-            - 8888:80
-            restart: unless-stopped
-            depends_on:
-            - mrbs-db
-        mrbs-db:
-            image: mariadb:latest
-            container_name: mrbs_db
-            environment:
-            - PUID=1000
-            - PGID=1000
-            - MYSQL_ROOT_PASSWORD=mrbs-root-pass
-            - TZ=Europe/London
-            - MYSQL_DATABASE=mrbs
-            - MYSQL_USER=mrbs-user
-            - MYSQL_PASSWORD=mrbs-pass
-            volumes:
-            - ./config/mysql:/var/lib/mysql
-            restart: unless-stopped
-    ```
-    PLEASE NOTE: If you're trying to run this on a raspberry pi, please use `jsurf/rpi-mariadb` for the database instead of `mariadb`.
-1. Adjust the port (default `8888`) to your needs
-2. Start the mrbs-docker:
-    ```bash
-    docker-compose up -d
-    ```
-3. Done! You can reach your mrbs-docker on `localhost:5080`
-4. Adjust your `config.inc.php` in `/opt/mrbs-docker/config/mrbs/www/config.inc.php`
+   ```yaml
+   version: "2"
+   services:
+     mrbs:
+       image: dorianim/mrbs
+       container_name: mrbs
+       environment:
+         - PUID=1000
+         - PGID=1000
+         - TZ=Europe/Berlin
+         - DB_HOST=mrbs-db
+         - DB_USER=mrbs-user
+         - DB_PASS=mrbs-pass
+         - DB_DATABASE=mrbs
+         # can be mysql or pgsql
+         - DB_TYPE=mysql
+       volumes:
+         - ./config/mrbs:/config
+       ports:
+         - 8888:80
+       restart: unless-stopped
+       depends_on:
+         - mrbs-db
+     mrbs-db:
+       image: mariadb:latest
+       container_name: mrbs_db
+       environment:
+         - PUID=1000
+         - PGID=1000
+         - MYSQL_ROOT_PASSWORD=mrbs-root-pass
+         - TZ=Europe/London
+         - MYSQL_DATABASE=mrbs
+         - MYSQL_USER=mrbs-user
+         - MYSQL_PASSWORD=mrbs-pass
+       volumes:
+         - ./config/mysql:/var/lib/mysql
+       restart: unless-stopped
+   ```
+   PLEASE NOTE: If you're trying to run this on a raspberry pi, please use `jsurf/rpi-mariadb` for the database instead of `mariadb`.
+3. Adjust the port (default `8888`) to your needs
+4. Start the mrbs-docker:
+   ```bash
+   docker-compose up -d
+   ```
+5. Done! You can reach your mrbs-docker on `localhost:5080`
+6. Adjust your `config.inc.php` in `/opt/mrbs-docker/config/mrbs/www/config.inc.php`
 
 # Updating
-To update, just go to your installation folder and pull  
+
+To update, just go to your installation folder and pull
+
 ```bash
 cd /opt/mrbs-docker
 docker-compose pull

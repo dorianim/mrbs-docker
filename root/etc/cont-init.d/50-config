@@ -1,15 +1,5 @@
 #!/usr/bin/with-contenv bash
 
-[[ $DB_HOST ]] && export MRBS_DB_HOST=$DB_HOST
-[[ $DB_USER ]] && export MRBS_DB_USER=$DB_USER
-[[ $DB_PASS ]] && export MRBS_DB_PASSWORD=$DB_PASS
-[[ $DB_DATABASE ]] && export MRBS_DB_DATABASE=$DB_DATABASE
-
-[[ -z $MRBS_DB_DATABASE ]] && MRBS_DB_DATABASE=$DB_DATABASE
-[[ -z $MRBS_DB_USER ]] && MRBS_DB_USER=$DB_USER
-[[ -z $MRBS_DB_HOST ]] && MRBS_DB_HOST=$DB_HOST
-[[ -z $MRBS_DB_PASSWORD ]] && MRBS_DB_PASSWORD=$DB_PASS
-
 chown -R abc:abc /var/www
 
 # create directory structure
@@ -30,25 +20,25 @@ rm -rf /var/www/html/assets
 ln -s /config/www/assets /var/www/html/assets
 
 # Set required variables depending on the db system used and mysql as default
-SQL_CMD="mysql -u$MRBS_DB_USER -h$MRBS_DB_HOST -p$MRBS_DB_PASSWORD -D$MRBS_DB_DATABASE"
+SQL_CMD="mysql -u$DB_USER -h$DB_HOST -p$DB_PASS -D$DB_DATABASE"
 SQL_ARGS="-sNe"
-SQL_QUERY="SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$MRBS_DB_DATABASE'"
+SQL_QUERY="SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$DB_DATABASE'"
 TABLES_FILE=tables.my.sql
 DB_PORT=3306
-if [[ "$MRBS_DB_SYSTEM" == "pgsql" ]]; then
-	export PGPASSWORD=$MRBS_DB_PASSWORD
-	SQL_CMD="psql -U $MRBS_DB_USER -h $MRBS_DB_HOST $MRBS_DB_DATABASE"
+if [[ "$DB_TYPE" == "pgsql" ]]; then
+	export PGPASSWORD=$DB_PASS
+	SQL_CMD="psql -U $DB_USER -h $DB_HOST $DB_DATABASE"
 	SQL_ARGS="-tc"
-	SQL_QUERY="SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = '$MRBS_DB_DATABASE'"
+	SQL_QUERY="SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = '$DB_DATABASE'"
 	TABLES_FILE=tables.pg.sql
 	DB_PORT=5432
 fi
 
 # check for the mysql endpoint for 30 seconds
 END=$((SECONDS + 30))
-while [[ ${SECONDS} -lt ${END} ]] && [[ "${MRBS_DB_HOST+x}" != "x" ]]; do
-	/usr/bin/nc -z ${MRBS_DB_HOST} ${DB_PORT} &&
-		if [[ -n "$(/usr/bin/nc -w1 ${MRBS_DB_HOST} ${DB_PORT})" ]]; then
+while [[ ${SECONDS} -lt ${END} ]] && [[ "${DB_HOST+x}" != "x" ]]; do
+	/usr/bin/nc -z ${DB_HOST} ${DB_PORT} &&
+		if [[ -n "$(/usr/bin/nc -w1 ${DB_HOST} ${DB_PORT})" ]]; then
 			[[ -n "${RUN}" ]] && break
 			RUN="RAN"
 			# we sleep here again due to first run init on DB containers
@@ -59,17 +49,9 @@ while [[ ${SECONDS} -lt ${END} ]] && [[ "${MRBS_DB_HOST+x}" != "x" ]]; do
 	sleep 1
 done
 
-# update database - will set up database if fresh, or, migrate existing
-echo "*** DB init/upgrade ***"
+# update database - will set up database if fresh
+echo "*** DB init ***"
 
-TABLE_COUNT=$($SQL_CMD $SQL_ARGS "$SQL_QUERY")
-if [[ $TABLE_COUNT -eq "0" ]]; then
-	echo "*** DB is empty -> initing!! ***"
-	if ! $SQL_CMD </usr/share/mrbs/$TABLES_FILE; then
-		echo "*** DB init FAILED!! ***"
-		exit 1
-	fi
-fi
 TABLE_COUNT=$($SQL_CMD $SQL_ARGS "$SQL_QUERY")
 if [[ $TABLE_COUNT -eq "0" ]]; then
 	echo "*** DB is empty -> initing!! ***"
