@@ -111,5 +111,7 @@ $auth['saml']['attr']['surname'] = '<surname attribute>';
 $auth['saml']['admin']['<group list attribute>'] = ['<admin group>'];
 ```
 
-You can test the authentication here: `mrbs.company.com/simplesaml/module.php/core/authenticate.php`. It will also show you all transmitted attributes.
-The admin password for simplesaml can be found in `config/keys/secretsalt`.
+- You can test the authentication here: `mrbs.company.com/simplesaml/module.php/core/authenticate.php`. It will also show you all transmitted attributes.
+- The admin password for simplesaml can be found in `config/keys/secretsalt`.
+- You need to add the redirect URL `https://mrbs.company.com/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp`
+- You need to add the Logout Service POST Binding URL `https://mrbs.company.com/simplesaml/module.php/saml/sp/saml2-logout.php/default-sp`
