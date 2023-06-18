@@ -572,7 +572,7 @@ $config = [
      * through https. If the user can access the service through
      * both http and https, this must be set to FALSE.
      */
-    'session.cookie.secure' => str_starts_with($auth['saml']['ssp_host'], 'https://'),
+    'session.cookie.secure' => $auth['saml']['ssp_secure_cookie'],
 
     /*
      * Set the SameSite attribute in the cookie.
