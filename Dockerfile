@@ -7,18 +7,7 @@ ARG MODERN_MRBS_THEME_RELEASE=v0.4.0
 
 LABEL maintainer="Dorian Zedler <mail@dorian.im>"
 
-ENV MUSL_LOCPATH="/usr/share/i18n/locales/musl"
 ENV MRBS_DB_SYSTEM="mysql"
-RUN apk add --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.13/community musl-locales musl-locales-lang \
-    && cd "$MUSL_LOCPATH" \
-    && for i in *.UTF-8; do \
-     i1=${i%%.UTF-8}; \
-     i2=${i1/_/-}; \
-     i3=${i/_/-}; \
-     cp -a "$i" "$i1"; \
-     cp -a "$i" "$i2"; \
-     cp -a "$i" "$i3"; \
-     done
 
 RUN \
   echo "**** install packages ****" && \
@@ -26,6 +15,8 @@ RUN \
   apk add --no-cache  \
     curl \
     mysql-client \
+    icu-libs \
+    icu-data-full \
     php81-ctype \
     php81-curl \
     php81-dom \
@@ -55,10 +46,7 @@ RUN \
   mkdir -p /usr/share/mrbs && \
   tar -C /usr/share/mrbs --wildcards --strip-components=1 -zxvf /tmp/mrbs.tar.gz $(tar --exclude="*/*" -tf /tmp/mrbs.tar.gz)tables.*.sql && \
   echo "**** cleanup ****" && \
-  rm -rf /tmp/* && \
-  echo "**** apply patches ****" && \
-  sed -i '80s/parent::init();/parent::init($lifetime);/' /var/www/html/lib/MRBS/Session/SessionSaml.php
-  # TODO: remove once it is fixed in MRBS
+  rm -rf /tmp/*
 
 RUN \
   echo "**** fetch simplesamlphp ****" && \
