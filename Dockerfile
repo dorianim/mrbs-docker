@@ -1,7 +1,7 @@
 FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.17
 
 # versions
-ARG MRBS_RELEASE=v1.11.1
+ARG MRBS_RELEASE=v1.11.3
 ARG SIMPLESAMLPHP_RELEASE=1.19.8
 ARG MODERN_MRBS_THEME_RELEASE=v0.4.0
 
