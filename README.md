@@ -111,6 +111,11 @@ $auth['saml']['attr']['surname'] = '<surname attribute>';
 $auth['saml']['admin']['<group list attribute>'] = ['<admin group>'];
 ```
 
+If you want to use SAML authentication with mrbs behind a SSL reverse proxy you need to set
+```php
+$auth['saml']['ssp_secure_cookie'] = true;
+```
+
 - You can test the authentication here: `mrbs.company.com/simplesaml/module.php/core/authenticate.php`. It will also show you all transmitted attributes.
 - The admin password for simplesaml can be found in `config/keys/secretsalt`.
 - You need to add the redirect URL `https://mrbs.company.com/simplesaml/module.php/saml/sp/saml2-acs.php/default-sp`
