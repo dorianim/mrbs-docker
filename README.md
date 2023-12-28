@@ -97,7 +97,7 @@ To configure SAML Authentication, you need to add these lines to your config.inc
 ```php
 $auth['type'] = 'saml';
 $auth['session'] = 'saml';
-$auth['saml']['ssp_host'] = '<host of your mrbs, eg https://mrbs.company.com/>';
+$auth['saml']['ssp_host'] = '<host of your mrbs, eg https://mrbs.company.com/, with a trailing slash>';
 $auth['saml']['ssp_idp'] = '<issuer of your SAML idp>';
 $auth['saml']['ssp_entity_id'] = '<client id of yout SAML idp>';
 $auth['saml']['ssp_single_sign_on_service'] = '<single sign on endpoint of your SAML idp>';
