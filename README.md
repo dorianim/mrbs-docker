@@ -97,7 +97,7 @@ To configure SAML Authentication, you need to add these lines to your config.inc
 ```php
 $auth['type'] = 'saml';
 $auth['session'] = 'saml';
-$auth['saml']['ssp_host'] = '<host of your mrbs, eg https://mrbs.company.com/>';
+$auth['saml']['ssp_host'] = '<host of your mrbs, eg https://mrbs.company.com/, with a trailing slash>';
 $auth['saml']['ssp_idp'] = '<issuer of your SAML idp>';
 $auth['saml']['ssp_entity_id'] = '<client id of yout SAML idp>';
 $auth['saml']['ssp_single_sign_on_service'] = '<single sign on endpoint of your SAML idp>';
@@ -109,6 +109,11 @@ $auth['saml']['attr']['mail'] = '<email attribute>';
 $auth['saml']['attr']['givenName'] = '<givenName attribute>';
 $auth['saml']['attr']['surname'] = '<surname attribute>';
 $auth['saml']['admin']['<group list attribute>'] = ['<admin group>'];
+```
+
+If you want to use SAML authentication with mrbs behind a SSL reverse proxy you need to set
+```php
+$auth['saml']['ssp_secure_cookie'] = true;
 ```
 
 - You can test the authentication here: `mrbs.company.com/simplesaml/module.php/core/authenticate.php`. It will also show you all transmitted attributes.
