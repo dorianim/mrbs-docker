@@ -1,7 +1,7 @@
-FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.17-1fb28795-ls26
+FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.20
 
 # versions
-ARG MRBS_RELEASE=v1.11.4
+ARG MRBS_RELEASE=v1.11.5
 ARG SIMPLESAMLPHP_RELEASE=1.19.8
 ARG MODERN_MRBS_THEME_RELEASE=v0.4.1
 
@@ -17,23 +17,23 @@ RUN \
     mysql-client \
     icu-libs \
     icu-data-full \
-    php81-ctype \
-    php81-curl \
-    php81-dom \
-    php81-gd \
-    php81-ldap \
-    php81-mbstring \
-    php81-mysqlnd \
-    php81-openssl \
-    php81-pdo_mysql \
-    php81-phar \
-    php81-simplexml \
-    php81-tokenizer \
-    php81-intl \
+    php83-ctype \
+    php83-curl \
+    php83-dom \
+    php83-gd \
+    php83-ldap \
+    php83-mbstring \
+    php83-mysqlnd \
+    php83-openssl \
+    php83-pdo_mysql \
+    php83-phar \
+    php83-simplexml \
+    php83-tokenizer \
+    php83-intl \
     tar && \
   echo "**** configure php-fpm ****" && \
-  sed -i 's/;clear_env = no/clear_env = no/g' /etc/php81/php-fpm.d/www.conf && \
-  echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /etc/php81/php-fpm.conf
+  sed -i 's/;clear_env = no/clear_env = no/g' /etc/php83/php-fpm.d/www.conf && \
+  echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /etc/php83/php-fpm.conf
 
 RUN \
   echo "**** fetch mrbs ****" && \
