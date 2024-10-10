@@ -23,6 +23,9 @@ mkdir -p \
 rm -rf /app/www/public/assets
 ln -s /config/www/assets /app/www/public/assets
 
+chown -R abc:abc /app/www/public
+chmod -R +r /config/www
+
 # Set required variables depending on the db system used and mysql as default
 SQL_CMD="mysql -u$DB_USER -h$DB_HOST -p$DB_PASS -D$DB_DATABASE"
 SQL_ARGS="-sNe"
