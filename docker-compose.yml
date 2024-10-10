@@ -14,7 +14,7 @@ services:
       - DB_DATABASE=mrbs
     volumes:
       - ./config/mrbs:/config
-      - ./dev/modern-mrbs-theme/modern:/var/www/html/Themes/modern
+      #- ./dev/modern-mrbs-theme/modern:/app/www/Themes/modern
     ports:
       - 8888:80
     depends_on:

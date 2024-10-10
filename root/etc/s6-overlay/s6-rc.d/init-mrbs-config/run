@@ -9,7 +9,7 @@ mkdir -p \
 
 # check for .env and copy default if needed
 [[ ! -f "/config/www/config.inc.php" ]] &&
-	cp /var/www/html/config.inc.php-sample /config/www/config.inc.php
+	cp /app/www/public/config.inc.php-sample /config/www/config.inc.php
 
 # genderate secret salt
 [[ ! -f "/config/keys/secretsalt" ]] &&
@@ -20,8 +20,8 @@ mkdir -p \
 	echo "WARNING: zero-length config.inc.php file detected. Please delete /config/www/config.inc.php and restart the container"
 
 # link assets
-rm -rf /var/www/html/assets
-ln -s /config/www/assets /var/www/html/assets
+rm -rf /app/www/public/assets
+ln -s /config/www/assets /app/www/public/assets
 
 # Set required variables depending on the db system used and mysql as default
 SQL_CMD="mysql -u$DB_USER -h$DB_HOST -p$DB_PASS -D$DB_DATABASE"

@@ -62,7 +62,7 @@ $timezone = getenv("TZ") ? getenv("TZ") : "Europe/Berlin";
  * SAML
  *************/
 
-$auth['saml']['ssp_path'] = '/var/www/simplesamlphp';
+$auth['saml']['ssp_path'] = '/app/www/simplesamlphp';
 $auth['saml']['ssp_protect_web_interface'] = true;
 $auth['saml']['ssp_secure_cookie'] = false;
 $auth['saml']['authsource'] = 'default-sp';
