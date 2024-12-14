@@ -1,8 +1,8 @@
-FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.20
+FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.21
 
 # versions
 ARG MRBS_RELEASE=v1.11.5
-ARG SIMPLESAMLPHP_RELEASE=1.19.8
+ARG SIMPLESAMLPHP_RELEASE=1.19.9
 ARG MODERN_MRBS_THEME_RELEASE=v0.4.2
 
 LABEL maintainer="Dorian Zedler <mail@dorian.im>"
@@ -15,7 +15,7 @@ RUN \
   apk update && \
   apk add --no-cache  \
     curl \
-    mysql-client \
+    mariadb-client \
     icu-libs \
     icu-data-full \
     php83-ctype \

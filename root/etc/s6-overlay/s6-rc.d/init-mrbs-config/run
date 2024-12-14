@@ -27,7 +27,7 @@ chown -R abc:abc /app/www/public
 chmod -R +r /config/www
 
 # Set required variables depending on the db system used and mysql as default
-SQL_CMD="mysql -u$DB_USER -h$DB_HOST -p$DB_PASS -D$DB_DATABASE"
+SQL_CMD="mariadb --skip-ssl -u$DB_USER -h$DB_HOST -p$DB_PASS -D$DB_DATABASE"
 SQL_ARGS="-sNe"
 SQL_QUERY="SELECT count(*) AS TN FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = '$DB_DATABASE'"
 TABLES_FILE=tables.my.sql
@@ -40,7 +40,7 @@ if [[ "$DB_TYPE" == "pgsql" ]]; then
 	DB_PORT=5432
 fi
 
-# check for the mysql endpoint
+# check for the mariadb endpoint
 echo "Waiting for DB to be available"
 END=$((SECONDS + 30))
 while [[ ${SECONDS} -lt ${END} ]] && [[ -n "${DB_HOST+x}" ]]; do

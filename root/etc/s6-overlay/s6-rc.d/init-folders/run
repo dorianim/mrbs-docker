@@ -4,8 +4,9 @@
 # make folders
 mkdir -p \
     /config/{keys,php,www} \
-    /config/log/{nginx,php} \
+    /config/log/{nginx,php,simplesamlphp} \
     /config/nginx \
     /run \
     /var/lib/nginx/tmp/client_body \
-    /var/tmp/nginx
+    /var/tmp/nginx \
+    /tmp/simplesamlphp

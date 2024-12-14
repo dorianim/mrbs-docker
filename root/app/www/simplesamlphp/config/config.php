@@ -65,9 +65,9 @@ $config = [
      * root directory.
      */
     'certdir' => 'cert/',
-    'loggingdir' => '/config/log/simplesaml',
+    'loggingdir' => '/config/log/simplesamlphp',
     'datadir' => 'data/',
-    'tempdir' => '/tmp/simplesaml',
+    'tempdir' => '/tmp/simplesamlphp',
 
     /*
      * Some information about the technical persons running this installation.
@@ -294,7 +294,7 @@ $config = [
      *
      */
     'logging.level' => SimpleSAML\Logger::NOTICE,
-    'logging.handler' => 'syslog',
+    'logging.handler' => 'file',
 
     /*
      * Specify the format of the logs. Its use varies depending on the log handler used (for instance, you cannot
@@ -591,7 +591,7 @@ $config = [
      * Example:
      *  'session.cookie.samesite' => 'None',
      */
-    'session.cookie.samesite' => \SimpleSAML\Utils\HTTP::canSetSameSiteNone() ? 'None' : null,
+    'session.cookie.samesite' => ($auth['saml']['ssp_secure_cookie'] && \SimpleSAML\Utils\HTTP::canSetSameSiteNone()) ? 'None' : null,
 
     /*
      * Options to override the default settings for php sessions.
