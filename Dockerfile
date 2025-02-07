@@ -3,7 +3,7 @@ FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.21
 # versions
 ARG MRBS_RELEASE=v1.11.6
 ARG SIMPLESAMLPHP_RELEASE=1.19.9
-ARG MODERN_MRBS_THEME_RELEASE=v0.5.0
+ARG MODERN_MRBS_THEME_RELEASE=v0.5.1
 
 LABEL maintainer="Dorian Zedler <mail@dorian.im>"
 
