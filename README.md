@@ -58,7 +58,7 @@ This is a docker container for the [Meeting room booking system](https://github.
          - mrbs-db
      mrbs-db:
        image: mariadb:latest
-       container_name: mrbs_db
+       container_name: mrbs-db
        environment:
          - PUID=1000
          - PGID=1000
