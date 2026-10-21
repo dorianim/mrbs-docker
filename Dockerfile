@@ -1,4 +1,4 @@
-FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.21
+FROM ghcr.io/linuxserver/baseimage-alpine-nginx:3.24
 
 # versions
 ARG MRBS_RELEASE=v1.11.6
@@ -18,24 +18,24 @@ RUN \
     mariadb-client \
     icu-libs \
     icu-data-full \
-    php83-ctype \
-    php83-curl \
-    php83-dom \
-    php83-gd \
-    php83-ldap \
-    php83-mbstring \
-    php83-mysqlnd \
-    php83-openssl \
-    php83-pdo_mysql \
-    php83-phar \
-    php83-simplexml \
-    php83-tokenizer \
-    php83-intl \
+    php85-ctype \
+    php85-curl \
+    php85-dom \
+    php85-gd \
+    php85-ldap \
+    php85-mbstring \
+    php85-mysqlnd \
+    php85-openssl \
+    php85-pdo_mysql \
+    php85-phar \
+    php85-simplexml \
+    php85-tokenizer \
+    php85-intl \
     tar && \
     echo "**** configure php-fpm to pass env vars ****" && \
-    sed -E -i 's/^;?clear_env ?=.*$/clear_env = no/g' /etc/php83/php-fpm.d/www.conf && \
-    grep -qxF 'clear_env = no' /etc/php83/php-fpm.d/www.conf || echo 'clear_env = no' >> /etc/php83/php-fpm.d/www.conf && \
-    echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /etc/php83/php-fpm.conf
+    sed -E -i 's/^;?clear_env ?=.*$/clear_env = no/g' /etc/php85/php-fpm.d/www.conf && \
+    grep -qxF 'clear_env = no' /etc/php85/php-fpm.d/www.conf || echo 'clear_env = no' >> /etc/php85/php-fpm.d/www.conf && \
+    echo "env[PATH] = /usr/local/bin:/usr/bin:/bin" >> /etc/php85/php-fpm.conf
 
 RUN \
   echo "**** fetch mrbs ****" && \
